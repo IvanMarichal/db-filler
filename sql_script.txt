@@ -1,0 +1,22 @@
+asdasd
+asd
+dsada
+sdas
+das
+das
+das
+subscription
+-----------------------------------------------------------------------------------------
+
+INSERT INTO table_name (column1, column2, column3, ...)
+INSERT INTO table_name (column1, column2, column3, ...)
+
+-----------------------------------------------------------------------------------------
+asdasd
+as
+das
+ds
+das
+das
+das
+d
