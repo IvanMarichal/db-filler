@@ -1,6 +1,6 @@
 initializer(){
-    echo -e "\n--$parameter\n-----------------------------------------------------------------------------------------\n\n\n-----------------------------------------------------------------------------------------\n\n\n" >> sql_script2.txt
-    number_table_start=$(cat sql_script2.txt | grep -n $parameter | cut -d ":" -f1 | head -1)
+    echo -e "\n--$parameter\n-----------------------------------------------------------------------------------------\n\n\n-----------------------------------------------------------------------------------------\n\n\n" >> sql_script.txt
+    number_table_start=$(cat sql_script.txt | grep -n $parameter | cut -d ":" -f1 | head -1)
     number_table_end=$(($number_table_start + 4))
 }
 
@@ -16,7 +16,7 @@ subscription () {
         number_table_end=$(($number_table_end + 1))
 
         #insert data
-        sed -i "$(($number_table_end - 1)) i INSERT INTO $parameter (id, description) VALUES ($(($h+1)), 'Lorem ipsum dolor sit amet')" sql_script2.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, description) VALUES ($h, 'Lorem ipsum dolor sit amet')" sql_script.txt
     done
 
 }
@@ -33,7 +33,7 @@ subscription_type () {
         number_table_end=$(($number_table_end + 1))
 
         #insert data
-        sed -i "$(($number_table_end - 1)) i INSERT INTO $parameter (id, type) VALUES ($(($h+1)), 'Lorem ipsum dolor sit amet')" sql_script2.txt
+        sed -i "$(($number_table_end - 1)) i INSERT INTO $parameter (id, type) VALUES ($h, 'Lorem ipsum dolor sit amet')" sql_script.txt
     done
 
 }
@@ -51,7 +51,7 @@ country () {
 
         #insert data
         country=$(awk "NR==$h" countries.txt)
-        sed -i "$(($number_table_end - 1)) i INSERT INTO $parameter(id, country, country_flag_link) VALUES ($(($h+1)), '$country', 'img/flags/$country.jpg')" sql_script2.txt
+        sed -i "$(($number_table_end - 1)) i INSERT INTO $parameter(id, country, country_flag_link) VALUES ($h, '$country', 'img/flags/$country.jpg')" sql_script.txt
     done
 
 }
@@ -75,7 +75,7 @@ user () {
         day=$(($(($RANDOM%29))+1))
         password=$(openssl rand -base64 10)
         random_country_id=$(($(($RANDOM%194))+1))
-        sed -i "$(($number_table_end - 1)) i INSERT INTO $parameter (id, name, surname, birth_date, is_admin, password, id_suscription, id_country) VALUES ($(($h+1)), '$name', '$surname', '$year-$month-$day', FALSE, '$password', $h, $random_country_id)" sql_script2.txt
+        sed -i "$(($number_table_end - 1)) i INSERT INTO $parameter (id, name, surname, birth_date, is_admin, password, id_suscription, id_country) VALUES ($h, '$name', '$surname', '$year-$month-$day', FALSE, '$password', $h, $random_country_id)" sql_script.txt
     done
 
 }
@@ -87,7 +87,7 @@ echo "0- Exit"
 read -p "Choose an option: " option
     case $option in
             1)read -p "How many rows: " rows
-            touch sql_script2.txt
+            touch sql_script.txt
             rows2=$(($rows + 1))
             subscription
             subscription_type
