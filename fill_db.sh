@@ -11,7 +11,7 @@ subscription () {
     initializer
     
     
-    for ((h = 0 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
@@ -28,12 +28,12 @@ subscription_type () {
     initializer
     
     
-    for ((h = 0 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
         #insert data
-        sed -i "$(($number_table_end - 1)) i INSERT INTO $parameter (id, type) VALUES ($h, 'Lorem ipsum dolor sit amet')" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, type) VALUES ($h, 'Lorem ipsum dolor sit amet')" sql_script.txt
     done
 
 }
@@ -45,13 +45,13 @@ country () {
     initializer
     
     
-    for ((h = 0 ; h < 197; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < 197; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
         #insert data
         country=$(awk "NR==$h" countries.txt)
-        sed -i "$(($number_table_end - 1)) i INSERT INTO $parameter(id, country, country_flag_link) VALUES ($h, '$country', 'img/flags/$country.jpg')" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter(id, country, country_flag_link) VALUES ($h, '$country', 'img/flags/$country.jpg')" sql_script.txt
     done
 
 }
@@ -63,7 +63,7 @@ user () {
     initializer
     
     
-    for ((h = 0 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
@@ -75,9 +75,35 @@ user () {
         day=$(($(($RANDOM%29))+1))
         password=$(openssl rand -base64 10)
         random_country_id=$(($(($RANDOM%194))+1))
-        sed -i "$(($number_table_end - 1)) i INSERT INTO $parameter (id, name, surname, birth_date, is_admin, password, id_suscription, id_country) VALUES ($h, '$name', '$surname', '$year-$month-$day', FALSE, '$password', $h, $random_country_id)" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, surname, birth_date, is_admin, password, id_suscription, id_country) VALUES ($h, '$name', '$surname', '$year-$month-$day', FALSE, '$password', $h, $random_country_id)" sql_script.txt
     done
 
+}
+
+
+user_avatar_link () {
+    
+    #Checks where the table section starts and ends
+    parameter="user_avatar_link"
+    initializer
+    
+    user_table_start=$(cat sql_script.txt | grep -n user | cut -d ":" -f1 | head -1)
+    user_table_end=$(($user_table_start + $rows2 + 4))
+    total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
+    cat sql_script.txt | tail -n $(($total_lines-$user_table_start-2)) | head -n $(($user_table_end-$user_table_start-4)) > temp_user.txt
+    
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+        name=$(awk "NR==$h" temp_user.txt | cut -d " " -f14)
+        name=${name:1:-2}
+        surname=$(awk "NR==$h" temp_user.txt | cut -d " " -f15)
+        surname=${surname:1:-2}
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_user, avatar_link) VALUES ($h, 'img/avatars/$name-$surname.jpg')" sql_script.txt
+    done
+    
 }
 
 
@@ -93,6 +119,7 @@ read -p "Choose an option: " option
             subscription_type
             country
             user
+            user_avatar_link
             sleep 2
             clear
             exit;;
