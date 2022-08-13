@@ -37,7 +37,6 @@ China
 Colombia
 Comoros
 Congo
-Congo {Democratic Rep}
 Costa Rica
 Croatia
 Cuba
@@ -45,7 +44,6 @@ Cyprus
 Czech Republic
 Denmark
 Djibouti
-Dominica
 Dominican Republic
 East Timor
 Ecuador
@@ -95,7 +93,6 @@ Kyrgyzstan
 Laos
 Latvia
 Lebanon
-Lesotho
 Liberia
 Libya
 Liechtenstein
@@ -116,10 +113,9 @@ Micronesia
 Moldova
 Monaco
 Mongolia
-Montenegro
 Morocco
 Mozambique
-Myanmar, {Burma}
+Myanmar
 Namibia
 Nauru
 Nepal
@@ -143,7 +139,6 @@ Qatar
 Romania
 Russian Federation
 Rwanda
-St Kitts & Nevis
 St Lucia
 Saint Vincent & the Grenadines
 Samoa
