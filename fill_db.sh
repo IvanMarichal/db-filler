@@ -205,6 +205,25 @@ card_number_card () {
     
 }
 
+
+user_card () {
+    
+    #Checks where the table section starts and ends
+    parameter="user_card"
+    initializer
+    
+
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+    
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_card, id_user) VALUES ($h, $h)" sql_script.txt
+    done
+    
+}
+
 clear
 echo "1- Fill the whole database"
 echo "0- Exit"
@@ -221,6 +240,7 @@ read -p "Choose an option: " option
             user_email
             card
             card_number_card
+            user_card
             sleep 2
             clear
             exit;;
