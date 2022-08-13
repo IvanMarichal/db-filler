@@ -45,7 +45,7 @@ country () {
     initializer
     
     
-    for ((h = 1 ; h < 197; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < 192; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
@@ -224,6 +224,33 @@ user_card () {
     
 }
 
+
+player () {
+    
+    #Checks where the table section starts and ends
+    parameter="player"
+    initializer
+    
+    
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+        name=$(awk "NR==$(($RANDOM%18240))" names.txt)
+        surname=$(awk "NR==$(($(($RANDOM%88800-2))+1))" surnames.txt) #expression to define limits of random number
+        year=$(($(($RANDOM%121))+1900)) #working vs is wrong
+        month=$(($(($RANDOM%10))+1))
+        day=$(($(($RANDOM%29))+1))
+        height=$(shuf -i 165-220 -n 1) #cm
+        weight=$(shuf -i 60-100 -n 1) #kilos
+        random_country_id=$(shuf -i 1-191 -n 1)
+        nationality=$(awk "NR==$random_country_id" nationalities.txt)
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, surname, birth_date, height, weight, id_country, nationality) VALUES ($h, '$name', '$surname', '$year-$month-$day', $height, $weight, $random_country_id, '$nationality')" sql_script.txt
+    done
+
+}
+
 clear
 echo "1- Fill the whole database"
 echo "0- Exit"
@@ -241,6 +268,7 @@ read -p "Choose an option: " option
             card
             card_number_card
             user_card
+            player
             sleep 2
             clear
             exit;;
