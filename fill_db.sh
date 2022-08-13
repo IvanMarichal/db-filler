@@ -139,6 +139,53 @@ user_email () {
 }
 
 
+card () {
+    
+    #Checks where the table section starts and ends
+    parameter="card"
+    initializer
+    
+
+    user_table_start=$(cat sql_script.txt | grep -n user | cut -d ":" -f1 | head -1)
+    user_table_end=$(($user_table_start + $rows2 + 4))
+    total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
+    cat sql_script.txt | tail -n $(($total_lines-$user_table_start-2)) | head -n $(($user_table_end-$user_table_start-4)) > temp_user.txt
+    
+    aux=0
+    payment_system=" "
+
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+
+        #insert data
+
+        name=$(awk "NR==$h" temp_user.txt | cut -d " " -f14)
+        name=${name:1:-2}
+        surname=$(awk "NR==$h" temp_user.txt | cut -d " " -f15)
+        surname=${surname:1:-2}
+        
+        year=$(shuf -i 23-33 -n 1) #random doesn't work here idk why, i've tried everything
+        month=$(($RANDOM%12 + 1))
+        security_code=$(($RANDOM%900+100))
+        aux=$(($RANDOM%3+1))
+        if [[ $aux -eq 1 ]]
+        then
+        payment_system="Credit card"
+        elif [[ $aux -eq 2 ]]
+        then
+        payment_system="Debit card"
+        elif [[ $aux -eq 3 ]]
+        then
+        payment_system="Prepaid card"
+        fi
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, expiration_date, security_code, cardholder, payment_system) VALUES ($h, '$year-$month', $security_code, '$name $surname', '$payment_system')" sql_script.txt
+    done
+    rm temp_user.txt
+}
+
+
 clear
 echo "1- Fill the whole database"
 echo "0- Exit"
@@ -153,6 +200,7 @@ read -p "Choose an option: " option
             user
             user_avatar_link
             user_email
+            card
             sleep 2
             clear
             exit;;
