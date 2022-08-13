@@ -68,13 +68,13 @@ user () {
         number_table_end=$(($number_table_end + 1))
 
         #insert data
-        name=$(awk "NR==$(($RANDOM%18240))" names.txt)
-        surname=$(awk "NR==$(($(($RANDOM%88800-2))+1))" surnames.txt) #expression to define limits of random number
-        year=$(($(($RANDOM%121))+1900)) #working vs is wrong
-        month=$(($(($RANDOM%10))+1))
-        day=$(($(($RANDOM%29))+1))
+        name=$(awk "NR==$(shuf -i 1-18239 -n 1)" names.txt)
+        surname=$(awk "NR==$(shuf -i 1-88799 -n 1)" surnames.txt) 
+        year=$(shuf -i 1950-2012 -n 1) 
+        month=$(shuf -i 1-12 -n 1)
+        day=$(shuf -i 1-31 -n 1)
         password=$(openssl rand -base64 10)
-        random_country_id=$(($(($RANDOM%194))+1))
+        random_country_id=$(shuf -i 1-191 -n 1)
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, surname, birth_date, is_admin, password, id_suscription, id_country) VALUES ($h, '$name', '$surname', '$year-$month-$day', FALSE, '$password', $h, $random_country_id)" sql_script.txt
     done
 
@@ -166,9 +166,9 @@ card () {
         surname=$(awk "NR==$h" temp_user.txt | cut -d " " -f15)
         surname=${surname:1:-2}
         
-        year=$(shuf -i 23-33 -n 1) #random doesn't work here idk why, i've tried everything
-        month=$(($RANDOM%12 + 1))
-        security_code=$(($RANDOM%900+100))
+        year=$(shuf -i 23-33 -n 1) 
+        month=$(shuf -i 1-12 -n 1)
+        security_code=$(shuf -i 100-999 -n 1)
         aux=$(($RANDOM%3+1))
         if [[ $aux -eq 1 ]]
         then
@@ -237,11 +237,11 @@ player () {
         number_table_end=$(($number_table_end + 1))
 
         #insert data
-        name=$(awk "NR==$(($RANDOM%18240))" names.txt)
-        surname=$(awk "NR==$(($(($RANDOM%88800-2))+1))" surnames.txt) #expression to define limits of random number
-        year=$(($(($RANDOM%121))+1900)) #working vs is wrong
-        month=$(($(($RANDOM%10))+1))
-        day=$(($(($RANDOM%29))+1))
+        name=$(awk "NR==$(shuf -i 1-18239 -n 1)" names.txt)
+        surname=$(awk "NR==$(shuf -i 1-88799 -n 1)" surnames.txt)
+        year=$(shuf -i 1980-2012 -n 1) 
+        month=$(shuf -i 1-12 -n 1)
+        day=$(shuf -i 1-31 -n 1)
         height=$(shuf -i 165-220 -n 1) #cm
         weight=$(shuf -i 60-100 -n 1) #kilos
         random_country_id=$(shuf -i 1-191 -n 1)
