@@ -277,6 +277,31 @@ player_avatar_link () {
     rm temp_user.txt
 }
 
+
+referee () {
+    
+    #Checks where the table section starts and ends
+    parameter="referee"
+    initializer
+    
+    
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+        name=$(awk "NR==$(shuf -i 1-18239 -n 1)" names.txt)
+        surname=$(awk "NR==$(shuf -i 1-88799 -n 1)" surnames.txt)
+        year=$(shuf -i 1960-2000 -n 1) 
+        month=$(shuf -i 1-12 -n 1)
+        day=$(shuf -i 1-31 -n 1)
+        random_country_id=$(shuf -i 1-191 -n 1)
+        nationality=$(awk "NR==$random_country_id" nationalities.txt)
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, surname, birth_date, id_country, nationality) VALUES ($h, '$name', '$surname', '$year-$month-$day', $random_country_id, '$nationality')" sql_script.txt
+    done
+
+}
+
 clear
 echo "1- Fill the whole database"
 echo "0- Exit"
@@ -296,6 +321,7 @@ read -p "Choose an option: " option
             user_card
             player
             player_avatar_link
+            referee
             sleep 2
             clear
             exit;;
