@@ -1,0 +1,16 @@
+UEFA Champions League:0:1
+FIFA World Cup:0:1
+Copa América:0:1
+CONMEBOL Libertadores:0:1
+Copa Argentina:7:1
+Uruguayan Primera Division:183:1
+Copa del Rey:159:1
+NBA:182:2
+French Open:58:3
+MLB:182:4
+PGA Championship:0:5
+FIVB Volleyball World League:0:6
+PBL:0:7
+International Swimming League:0:8
+World Boxing Council:111:9
+European Champions League:0:10
