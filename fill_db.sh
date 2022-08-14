@@ -579,7 +579,29 @@ team () {
 }
 
 
+team_logo_link () {
+    
+    #Checks where the table section starts and ends
+    parameter="team_logo_link"
+    initializer
+    
+    user_table_start=$(cat sql_script.txt | grep -n team- | cut -d ":" -f1 | head -1)
+    user_table_end=$(($user_table_start + $rows2 + 4))
+    total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
+    cat sql_script.txt | tail -n $(($total_lines-$user_table_start-2)) | head -n $(($user_table_end-$user_table_start-4)) > temp_user.txt
+    
 
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        team_logo=$(awk "NR==$h" temp_user.txt | cut -d "," -f5)
+        team_logo=${team_logo:2:-1}
+        
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_team, logo_link) VALUES ($h, 'img/logos/${team_logo// /_}_$h')" sql_script.txt
+    done
+    rm temp_user.txt
+}
 
 rm sql_script.txt
 clear
@@ -613,7 +635,7 @@ read -p "Choose an option: " option
             event
             user_fav_events
             team
-            
+            team_logo_link
 
             sleep 2
             clear
