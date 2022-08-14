@@ -1,6 +1,6 @@
 initializer(){
-    echo -e "\n--$parameter\n-----------------------------------------------------------------------------------------\n\n\n-----------------------------------------------------------------------------------------\n\n\n" >> sql_script.txt
-    number_table_start=$(cat sql_script.txt | grep -n $parameter | cut -d ":" -f1 | head -1)
+    echo -e "\n--$parameter--\n-----------------------------------------------------------------------------------------\n\n\n-----------------------------------------------------------------------------------------\n\n\n" >> sql_script.txt
+    number_table_start=$(cat sql_script.txt | grep -n $parameter-- | cut -d ":" -f1 | head -1)
     number_table_end=$(($number_table_start + 4))
 }
 
@@ -495,6 +495,37 @@ user_fav_league () {
     
 }
 
+
+event () {
+    
+    #Checks where the table section starts and ends
+    parameter="event"
+    initializer
+    
+    
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+        random=$(shuf -i 1-2 -n 1) 
+        year=$(shuf -i 2022-2023 -n 1) 
+        month=$(shuf -i 1-12 -n 1)
+        day=$(shuf -i 1-31 -n 1)
+        hour=$(shuf -i 1-12 -n 1)
+        minute=$(shuf -i 10-59 -n 1)
+        time_="AM"
+        if [[ $random -eq 2 ]]
+        then
+        time_="PM"
+        fi
+        start_date="$year$month$day $hour:$minute:00 $time_" #i'm not sure if it works in this format
+        location=$(awk "NR==$(shuf -i 2-$(wc -l cities.csv | cut -d " " -f1) -n 1)" cities.csv | cut -d "," -f1,2)
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, start_date, location, venue) VALUES ($h, '$start_date', '$location', 'Lorem ipsum')" sql_script.txt
+    done
+    
+}
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -524,6 +555,7 @@ read -p "Choose an option: " option
             league
             league_logo_link
             user_fav_league
+            event
 
             sleep 2
             clear
