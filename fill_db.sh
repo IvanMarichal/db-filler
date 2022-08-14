@@ -232,7 +232,7 @@ player () {
     initializer
     
     
-    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $(($rows*2+1)) ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
@@ -259,11 +259,11 @@ player_avatar_link () {
     initializer
     
     user_table_start=$(cat sql_script.txt | grep -n player | cut -d ":" -f1 | head -1)
-    user_table_end=$(($user_table_start + $rows2 + 4))
+    user_table_end=$(($user_table_start + $(($rows*2+1)) + 4))
     total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
     cat sql_script.txt | tail -n $(($total_lines-$user_table_start-2)) | head -n $(($user_table_end-$user_table_start-4)) > temp_user.txt
     
-    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $(($rows*2+1)) ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
@@ -566,7 +566,7 @@ team () {
     
     
 
-    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $(($rows*2+1)) ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
@@ -586,12 +586,12 @@ team_logo_link () {
     initializer
     
     user_table_start=$(cat sql_script.txt | grep -n team- | cut -d ":" -f1 | head -1)
-    user_table_end=$(($user_table_start + $rows2 + 4))
+    user_table_end=$(($user_table_start + $(($rows*2+1)) + 4))
     total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
     cat sql_script.txt | tail -n $(($total_lines-$user_table_start-2)) | head -n $(($user_table_end-$user_table_start-4)) > temp_user.txt
     
 
-    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $(($rows*2+1)) ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
@@ -601,6 +601,26 @@ team_logo_link () {
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_team, logo_link) VALUES ($h, 'img/logos/${team_logo// /_}_$h')" sql_script.txt
     done
     rm temp_user.txt
+}
+
+
+team_visitor () {
+    
+    #Checks where the table section starts and ends
+    parameter="team_visitor"
+    initializer
+    
+    id_team=1
+
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+        id_event=$h
+        id_team=$(($h*2 - 1 ))
+
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_event, id_team) VALUES ($id_event, $id_team)" sql_script.txt
+    done
+    
 }
 
 rm sql_script.txt
@@ -636,6 +656,7 @@ read -p "Choose an option: " option
             user_fav_events
             team
             team_logo_link
+            team_visitor
 
             sleep 2
             clear
