@@ -463,6 +463,38 @@ league_logo_link () {
 }
 
 
+user_fav_league () {
+    
+    #Checks where the table section starts and ends
+    parameter="user_fav_league"
+    initializer
+    
+    total_lines_user=$rows
+    total_lines_league=$(wc -l leagues.txt | cut -d " " -f1)
+    
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+        receive_browser_notifs="FALSE"
+        receive_mail_notifs="FALSE"
+        if [[ $(shuf -i 1-2 -n 1) -eq 2 ]]
+        then
+        receive_browser_notifs="TRUE"
+        fi
+        if [[ $(shuf -i 1-2 -n 1) -eq 2 ]]
+        then
+        receive_mail_notifs="TRUE"
+        fi
+
+        id_user=$(shuf -i 1-$total_lines_user -n 1)
+        id_league=$(shuf -i 1-$total_lines_league -n 1)
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_league, id_user, receive_browser_notifs, receive_mail_notifs) VALUES ($id_league, $id_user, $receive_browser_notifs, $receive_mail_notifs)" sql_script.txt
+    done
+    
+}
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -491,6 +523,7 @@ read -p "Choose an option: " option
             sport_name
             league
             league_logo_link
+            user_fav_league
 
             sleep 2
             clear
