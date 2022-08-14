@@ -378,6 +378,28 @@ manager_avatar_link () {
     done
     rm temp_user.txt
 }
+
+
+sport () {
+    
+    #Checks where the table section starts and ends
+    parameter="sport"
+    initializer
+    
+
+    
+    for ((h = 1 ; h < $(($(wc -l sports.txt | cut -d " " -f1)+1)) ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+        referees_by_event=$(awk "NR==$h" sports.txt | cut -d ":" -f2)
+        players_by_team=$(awk "NR==$h" sports.txt | cut -d ":" -f3)
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, referees_by_event, players_by_team) VALUES ($h, $referees_by_event, $players_by_team)" sql_script.txt
+    done
+   
+}
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -402,6 +424,7 @@ read -p "Choose an option: " option
             referee_avatar_link
             manager
             manager_avatar_link
+            sport
             sleep 2
             clear
             exit;;
