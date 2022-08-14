@@ -400,6 +400,26 @@ sport () {
    
 }
 
+
+sport_name () {
+    
+    #Checks where the table section starts and ends
+    parameter="sport_name"
+    initializer
+    
+
+    
+    for ((h = 1 ; h < $(($(wc -l sports.txt | cut -d " " -f1)+1)) ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+        sport=$(awk "NR==$h" sports.txt | cut -d ":" -f1)
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name) VALUES ($h, '$sport')" sql_script.txt
+    done
+   
+}
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -425,6 +445,8 @@ read -p "Choose an option: " option
             manager
             manager_avatar_link
             sport
+            sport_name
+            
             sleep 2
             clear
             exit;;

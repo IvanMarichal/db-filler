@@ -1,10 +1,10 @@
-soccer:4:11
-basketball:2:5
-tennis:1:1
-baseball:4:9
-golf:0:1
-volleyball:2:6
-badminton:6:1
-swimming:2:10
-boxing:1:1
-table tennis:1:1
+Soccer:4:11
+Basketball:2:5
+Tennis:1:1
+Baseball:4:9
+Golf:0:1
+Volleyball:2:6
+Badminton:6:1
+Swimming:2:10
+Boxing:1:1
+Table tennis:1:1
