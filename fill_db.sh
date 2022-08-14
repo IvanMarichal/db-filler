@@ -623,6 +623,27 @@ team_visitor () {
     
 }
 
+
+team_local () {
+    
+    #Checks where the table section starts and ends
+    parameter="team_local"
+    initializer
+    
+    id_team=1
+
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+        id_event=$h
+        id_team=$(($h*2))
+
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_event, id_team) VALUES ($id_event, $id_team)" sql_script.txt
+    done
+    
+}
+
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -657,6 +678,7 @@ read -p "Choose an option: " option
             team
             team_logo_link
             team_visitor
+            team_local
 
             sleep 2
             clear
