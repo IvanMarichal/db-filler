@@ -442,6 +442,27 @@ league () {
    
 }
 
+
+league_logo_link () {
+    
+    #Checks where the table section starts and ends
+    parameter="league_logo_link"
+    initializer
+    
+
+    
+    for ((h = 1 ; h < $(($(wc -l leagues.txt | cut -d " " -f1)+1)) ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+        league=$(awk "NR==$h" leagues.txt | cut -d ":" -f1)
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_league, logo_link) VALUES ($h, 'img/logos/${league// /_}.jpg')" sql_script.txt #${league// /_} is to replace the spaces in the name for _
+    done
+   
+}
+
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -469,6 +490,7 @@ read -p "Choose an option: " option
             sport
             sport_name
             league
+            league_logo_link
 
             sleep 2
             clear
