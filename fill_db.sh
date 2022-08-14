@@ -557,6 +557,30 @@ user_fav_events () {
     
 }
 
+
+team () {
+    
+    #Checks where the table section starts and ends
+    parameter="team"
+    initializer
+    
+    
+
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        id_country=$(shuf -i 1-$(wc -l countries.txt | cut -d " " -f1) -n 1)
+        id_league=$(shuf -i 1-$(wc -l leagues.txt | cut -d " " -f1) -n 1)
+        
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, id_country, id_league) VALUES ($h, 'Lorem ipsum', $id_country, $id_league)" sql_script.txt
+    done
+    
+}
+
+
+
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -588,6 +612,8 @@ read -p "Choose an option: " option
             user_fav_league
             event
             user_fav_events
+            team
+            
 
             sleep 2
             clear
