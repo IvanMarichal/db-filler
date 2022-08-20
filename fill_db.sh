@@ -56,10 +56,10 @@ country () {
 
 }
 
-user () {
+client () {
     
     #Checks where the table section starts and ends
-    parameter="user"
+    parameter="client"
     initializer
     
     
@@ -75,48 +75,48 @@ user () {
         day=$(shuf -i 1-31 -n 1)
         password=$(openssl rand -base64 10)
         random_country_id=$(shuf -i 1-191 -n 1)
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, surname, birth_date, is_admin, password, id_suscription, id_country) VALUES ($h, '$name', '$surname', '$year-$month-$day', FALSE, '$password', $h, $random_country_id)" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, surname, birth_date, is_admin, password, id_subscription, id_country) VALUES ($h, '$name', '$surname', '$year-$month-$day', FALSE, '$password', $h, $random_country_id)" sql_script.txt
     done
 
 }
 
 
-user_avatar_link () {
+client_avatar_link () {
     
     #Checks where the table section starts and ends
-    parameter="user_avatar_link"
+    parameter="client_avatar_link"
     initializer
     
-    user_table_start=$(cat sql_script.txt | grep -n user | cut -d ":" -f1 | head -1)
-    user_table_end=$(($user_table_start + $rows2 + 4))
+    client_table_start=$(cat sql_script.txt | grep -n client | cut -d ":" -f1 | head -1)
+    client_table_end=$(($client_table_start + $rows2 + 4))
     total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
-    cat sql_script.txt | tail -n $(($total_lines-$user_table_start-2)) | head -n $(($user_table_end-$user_table_start-4)) > temp_user.txt
+    cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) > temp_client.txt
     
     for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
         #insert data
-        name=$(awk "NR==$h" temp_user.txt | cut -d " " -f14)
+        name=$(awk "NR==$h" temp_client.txt | cut -d " " -f14)
         name=${name:1:-2}
-        surname=$(awk "NR==$h" temp_user.txt | cut -d " " -f15)
+        surname=$(awk "NR==$h" temp_client.txt | cut -d " " -f15)
         surname=${surname:1:-2}
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_user, avatar_link) VALUES ($h, 'img/avatars/$name-$surname.jpg')" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_client, avatar_link) VALUES ($h, 'img/avatars/$name-$surname.jpg')" sql_script.txt
     done
-    rm temp_user.txt
+    rm temp_client.txt
 }
 
 
-user_email () {
+client_user () {
     
     #Checks where the table section starts and ends
-    parameter="user_email"
+    parameter="client_user"
     initializer
     
-    user_table_start=$(cat sql_script.txt | grep -n user | cut -d ":" -f1 | head -1)
-    user_table_end=$(($user_table_start + $rows2 + 4))
+    client_table_start=$(cat sql_script.txt | grep -n client | cut -d ":" -f1 | head -1)
+    client_table_end=$(($client_table_start + $rows2 + 4))
     total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
-    cat sql_script.txt | tail -n $(($total_lines-$user_table_start-2)) | head -n $(($user_table_end-$user_table_start-4)) > temp_user.txt
+    cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) > temp_client.txt
     
     for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
     do
@@ -125,17 +125,17 @@ user_email () {
         domain="gmail.com"
 
         #insert data
-        name=$(awk "NR==$h" temp_user.txt | cut -d " " -f14)
+        name=$(awk "NR==$h" temp_client.txt | cut -d " " -f14)
         name=${name:1:-2}
-        surname=$(awk "NR==$h" temp_user.txt | cut -d " " -f15)
+        surname=$(awk "NR==$h" temp_client.txt | cut -d " " -f15)
         surname=${surname:1:-2}
         if [[ $h%3 -eq  0 ]] #to randomize but not rlly
         then
         domain="hotmail.com"
         fi
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_user, email) VALUES ($h, '$name$surname@$domain')" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_client, email) VALUES ($h, '$name$surname@$domain')" sql_script.txt
     done
-    rm temp_user.txt
+    rm temp_client.txt
 }
 
 
@@ -146,10 +146,10 @@ card () {
     initializer
     
 
-    user_table_start=$(cat sql_script.txt | grep -n user | cut -d ":" -f1 | head -1)
-    user_table_end=$(($user_table_start + $rows2 + 4))
+    client_table_start=$(cat sql_script.txt | grep -n client | cut -d ":" -f1 | head -1)
+    client_table_end=$(($client_table_start + $rows2 + 4))
     total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
-    cat sql_script.txt | tail -n $(($total_lines-$user_table_start-2)) | head -n $(($user_table_end-$user_table_start-4)) > temp_user.txt
+    cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) > temp_client.txt
     
     aux=0
     payment_system=" "
@@ -161,9 +161,9 @@ card () {
 
         #insert data
 
-        name=$(awk "NR==$h" temp_user.txt | cut -d " " -f14)
+        name=$(awk "NR==$h" temp_client.txt | cut -d " " -f14)
         name=${name:1:-2}
-        surname=$(awk "NR==$h" temp_user.txt | cut -d " " -f15)
+        surname=$(awk "NR==$h" temp_client.txt | cut -d " " -f15)
         surname=${surname:1:-2}
         
         year=$(shuf -i 23-33 -n 1) 
@@ -182,7 +182,7 @@ card () {
         fi
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, expiration_date, security_code, cardholder, payment_system) VALUES ($h, '$year-$month', $security_code, '$name $surname', '$payment_system')" sql_script.txt
     done
-    rm temp_user.txt
+    rm temp_client.txt
 }
 
 
@@ -206,10 +206,10 @@ card_number_card () {
 }
 
 
-user_card () {
+client_card () {
     
     #Checks where the table section starts and ends
-    parameter="user_card"
+    parameter="client_card"
     initializer
     
 
@@ -219,7 +219,7 @@ user_card () {
 
         #insert data
     
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_card, id_user) VALUES ($h, $h)" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_card, id_client) VALUES ($h, $h)" sql_script.txt
     done
     
 }
@@ -258,23 +258,23 @@ player_avatar_link () {
     parameter="player_avatar_link"
     initializer
     
-    user_table_start=$(cat sql_script.txt | grep -n player | cut -d ":" -f1 | head -1)
-    user_table_end=$(($user_table_start + $(($rows*2+1)) + 4))
+    client_table_start=$(cat sql_script.txt | grep -n player | cut -d ":" -f1 | head -1)
+    client_table_end=$(($client_table_start + $(($rows*2+1)) + 4))
     total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
-    cat sql_script.txt | tail -n $(($total_lines-$user_table_start-2)) | head -n $(($user_table_end-$user_table_start-4)) > temp_user.txt
+    cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) > temp_client.txt
     
     for ((h = 1 ; h < $(($rows*2+1)) ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
         #insert data
-        name=$(awk "NR==$h" temp_user.txt | cut -d " " -f14)
+        name=$(awk "NR==$h" temp_client.txt | cut -d " " -f14)
         name=${name:1:-2}
-        surname=$(awk "NR==$h" temp_user.txt | cut -d " " -f15)
+        surname=$(awk "NR==$h" temp_client.txt | cut -d " " -f15)
         surname=${surname:1:-2}
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_player, avatar_link) VALUES ($h, 'img/avatars/$name-$surname.jpg')" sql_script.txt
     done
-    rm temp_user.txt
+    rm temp_client.txt
 }
 
 
@@ -309,23 +309,23 @@ referee_avatar_link () {
     parameter="referee_avatar_link"
     initializer
     
-    user_table_start=$(cat sql_script.txt | grep -n referee | cut -d ":" -f1 | head -1)
-    user_table_end=$(($user_table_start + $rows2 + 4))
+    client_table_start=$(cat sql_script.txt | grep -n referee | cut -d ":" -f1 | head -1)
+    client_table_end=$(($client_table_start + $rows2 + 4))
     total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
-    cat sql_script.txt | tail -n $(($total_lines-$user_table_start-2)) | head -n $(($user_table_end-$user_table_start-4)) > temp_user.txt
+    cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) > temp_client.txt
     
     for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
         #insert data
-        name=$(awk "NR==$h" temp_user.txt | cut -d " " -f12)
+        name=$(awk "NR==$h" temp_client.txt | cut -d " " -f12)
         name=${name:1:-2}
-        surname=$(awk "NR==$h" temp_user.txt | cut -d " " -f13)
+        surname=$(awk "NR==$h" temp_client.txt | cut -d " " -f13)
         surname=${surname:1:-2}
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_referee, avatar_link) VALUES ($h, 'img/avatars/$name-$surname.jpg')" sql_script.txt
     done
-    rm temp_user.txt
+    rm temp_client.txt
 }
 
 
@@ -360,23 +360,23 @@ manager_avatar_link () {
     parameter="manager_avatar_link"
     initializer
     
-    user_table_start=$(cat sql_script.txt | grep -n manager | cut -d ":" -f1 | head -1)
-    user_table_end=$(($user_table_start + $rows2 + 4))
+    client_table_start=$(cat sql_script.txt | grep -n manager | cut -d ":" -f1 | head -1)
+    client_table_end=$(($client_table_start + $rows2 + 4))
     total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
-    cat sql_script.txt | tail -n $(($total_lines-$user_table_start-2)) | head -n $(($user_table_end-$user_table_start-4)) > temp_user.txt
+    cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) > temp_client.txt
     
     for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
         #insert data
-        name=$(awk "NR==$h" temp_user.txt | cut -d " " -f12)
+        name=$(awk "NR==$h" temp_client.txt | cut -d " " -f12)
         name=${name:1:-2}
-        surname=$(awk "NR==$h" temp_user.txt | cut -d " " -f13)
+        surname=$(awk "NR==$h" temp_client.txt | cut -d " " -f13)
         surname=${surname:1:-2}
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_manager, avatar_link) VALUES ($h, 'img/avatars/$name-$surname.jpg')" sql_script.txt
     done
-    rm temp_user.txt
+    rm temp_client.txt
 }
 
 
@@ -463,13 +463,13 @@ league_logo_link () {
 }
 
 
-user_fav_league () {
+client_fav_league () {
     
     #Checks where the table section starts and ends
-    parameter="user_fav_league"
+    parameter="client_fav_league"
     initializer
     
-    total_lines_user=$rows
+    total_lines_client=$rows
     total_lines_league=$(wc -l leagues.txt | cut -d " " -f1)
     
     for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
@@ -488,9 +488,9 @@ user_fav_league () {
         receive_mail_notifs="TRUE"
         fi
 
-        id_user=$(shuf -i 1-$total_lines_user -n 1)
+        id_client=$(shuf -i 1-$total_lines_client -n 1)
         id_league=$(shuf -i 1-$total_lines_league -n 1)
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_league, id_user, receive_browser_notifs, receive_mail_notifs) VALUES ($id_league, $id_user, $receive_browser_notifs, $receive_mail_notifs)" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_league, id_client, receive_browser_notifs, receive_mail_notifs) VALUES ($id_league, $id_client, $receive_browser_notifs, $receive_mail_notifs)" sql_script.txt
     done
     
 }
@@ -527,10 +527,10 @@ event () {
 }
 
 
-user_fav_events () {
+client_fav_events () {
     
     #Checks where the table section starts and ends
-    parameter="user_fav_events"
+    parameter="client_fav_events"
     initializer
     
     
@@ -550,9 +550,9 @@ user_fav_events () {
         receive_mail_notifs="TRUE"
         fi
         id_event=$(shuf -i 1-$rows -n 1)
-        id_user=$(shuf -i 1-$rows -n 1)
+        id_client=$(shuf -i 1-$rows -n 1)
         
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_event, id_user, receive_browser_notifs, receive_mail_notifs) VALUES ($id_event, $id_user, $receive_browser_notifs, $receive_mail_notifs)" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_event, id_client, receive_browser_notifs, receive_mail_notifs) VALUES ($id_event, $id_client, $receive_browser_notifs, $receive_mail_notifs)" sql_script.txt
     done
     
 }
@@ -585,22 +585,22 @@ team_logo_link () {
     parameter="team_logo_link"
     initializer
     
-    user_table_start=$(cat sql_script.txt | grep -n team- | cut -d ":" -f1 | head -1)
-    user_table_end=$(($user_table_start + $(($rows*2+1)) + 4))
+    client_table_start=$(cat sql_script.txt | grep -n team- | cut -d ":" -f1 | head -1)
+    client_table_end=$(($client_table_start + $(($rows*2+1)) + 4))
     total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
-    cat sql_script.txt | tail -n $(($total_lines-$user_table_start-2)) | head -n $(($user_table_end-$user_table_start-4)) > temp_user.txt
+    cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) > temp_client.txt
     
 
     for ((h = 1 ; h < $(($rows*2+1)) ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
-        team_logo=$(awk "NR==$h" temp_user.txt | cut -d "," -f5)
+        team_logo=$(awk "NR==$h" temp_client.txt | cut -d "," -f5)
         team_logo=${team_logo:2:-1}
         
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_team, logo_link) VALUES ($h, 'img/logos/${team_logo// /_}_$h')" sql_script.txt
     done
-    rm temp_user.txt
+    rm temp_client.txt
 }
 
 
@@ -656,12 +656,12 @@ read -p "Choose an option: " option
             subscription
             subscription_type
             country
-            user
-            user_avatar_link
-            user_email
+            client
+            client_avatar_link
+            client_user
             card
             card_number_card
-            user_card
+            client_card
             player
             player_avatar_link
             referee
@@ -672,9 +672,9 @@ read -p "Choose an option: " option
             sport_name
             league
             league_logo_link
-            user_fav_league
+            client_fav_league
             event
-            user_fav_events
+            client_fav_events
             team
             team_logo_link
             team_visitor
