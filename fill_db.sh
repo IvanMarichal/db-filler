@@ -174,18 +174,21 @@ card () {
         year=$(shuf -i 23-33 -n 1) 
         month=$(shuf -i 1-12 -n 1)
         security_code=$(shuf -i 100-999 -n 1)
-        aux=$(($RANDOM%3+1))
-        if [[ $aux -eq 1 ]]
+        aux=$(shuf -i 1-2 -n 1)
+        aux2=$(shuf -i 1-2 -n 1)
+        debit_or_credit="Debit card"
+        payment_system="Visa"
+
+        if [[ $aux -eq 2 ]]
         then
-        payment_system="Credit card"
-        elif [[ $aux -eq 2 ]]
-        then
-        payment_system="Debit card"
-        elif [[ $aux -eq 3 ]]
-        then
-        payment_system="Prepaid card"
+        debit_or_credit="Credit card"
         fi
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, expiration_date, security_code, cardholder, payment_system) VALUES ($h, '$year-$month', $security_code, '$name $surname', '$payment_system')" sql_script.txt
+
+        if [[ $aux2 -eq 2 ]]
+        then
+        payment_system="MasterCard"
+        fi
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, expiration_date, security_code, cardholder, payment_system, debit_or_credit) VALUES ($h, '$year-$month', $security_code, '$name $surname', '$payment_system', '$debit_or_credit')" sql_script.txt
     done
     rm temp_client.txt
 }
