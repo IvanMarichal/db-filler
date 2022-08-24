@@ -1,6 +1,6 @@
 initializer(){
     echo -e "\n--$parameter--\n-----------------------------------------------------------------------------------------\n\n\n-----------------------------------------------------------------------------------------\n\n\n" >> sql_script.txt
-    number_table_start=$(cat sql_script.txt | grep -n $parameter-- | cut -d ":" -f1 | head -1)
+    number_table_start=$(cat sql_script.txt | grep -n ^--$parameter--$ | cut -d ":" -f1 | head -1)
     number_table_end=$(($number_table_start + 4))
 }
 
@@ -573,9 +573,10 @@ team () {
     initializer
     
     
-
+    
     for ((h = 1 ; h < $(($rows*2+1)) ; h++)) #repeat procces as many times as indicated
     do
+        #insert data
         number_table_end=$(($number_table_end + 1))
 
         id_country=$(shuf -i 1-$(wc -l countries.txt | cut -d " " -f1) -n 1)
@@ -600,7 +601,8 @@ team_logo_link () {
     
 
     for ((h = 1 ; h < $(($rows*2+1)) ; h++)) #repeat procces as many times as indicated
-    do
+    do  
+        #insert data
         number_table_end=$(($number_table_end + 1))
 
         team_logo=$(awk "NR==$h" temp_client.txt | cut -d "," -f5)
@@ -622,6 +624,7 @@ team_visitor () {
 
     for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
     do
+        #insert data
         number_table_end=$(($number_table_end + 1))
         id_event=$h
         id_team=$(($h*2 - 1 ))
@@ -642,6 +645,7 @@ team_local () {
 
     for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
     do
+        #insert data
         number_table_end=$(($number_table_end + 1))
         id_event=$h
         id_team=$(($h*2))
@@ -649,6 +653,151 @@ team_local () {
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_event, id_team) VALUES ($id_event, $id_team)" sql_script.txt
     done
     
+}
+
+
+user () {
+    
+    #Checks where the table section starts and ends
+    parameter="user"
+    initializer
+    
+    #gets the client_user table
+    client_table_start=$(cat sql_script.txt | grep -n client_user- | cut -d ":" -f1 | head -1)
+    client_table_end=$(($client_table_start + $rows2 + 4))
+    total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
+    cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) > temp_client.txt
+
+    #gets the client table
+    client_table_start=$(cat sql_script.txt | grep -n client- | cut -d ":" -f1 | head -1)
+    client_table_end=$(($client_table_start + $rows2 + 4))
+    total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
+    cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) > temp_client2.txt
+
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        #insert data
+        number_table_end=$(($number_table_end + 1))
+
+        
+        email=$(awk "NR==$h" temp_client.txt | cut -d "," -f3)
+        email=${email:2:-1}
+
+        name=$(awk "NR==$h" temp_client2.txt | cut -d "," -f9)
+        name=${name:2:-1}
+
+        surname=$(awk "NR==$h" temp_client2.txt | cut -d "," -f10)
+        surname=${surname:2:-1}
+        name="$name $surname"
+
+        password=$(awk "NR==$h" temp_client2.txt | cut -d "," -f13)
+        password=${password:2:-1}
+
+        #section to create "email_verified_at"
+        year=$(shuf -i 2015-2022 -n 1) 
+        month=$(shuf -i 1-12 -n 1)
+        day=$(shuf -i 1-31 -n 1)
+        hour=$(shuf -i 1-23 -n 1)
+        minute=$(shuf -i 1-59 -n 1)
+        second=$(shuf -i 1-59 -n 1)
+
+        month_e=$month
+        day_e=$day
+        hour_e=$hour
+        minute_e=$minute
+        second_e=$second
+
+        if [[ ${#month} -eq 1 ]]
+        then
+        month_e="0$month"
+        fi
+        if [[ ${#day} -eq 1 ]]
+        then
+        day_e="0$day"
+        fi
+        if [[ ${#hour} -eq 1 ]]
+        then
+        hour_e="0$hour"
+        fi
+        if [[ ${#minute} -eq 1 ]]
+        then
+        minute_e="0$minute"
+        fi
+        if [[ ${#second} -eq 1 ]]
+        then
+        second_e="0$second"
+        fi
+        
+
+        email_verified_at="$year-$month_e-$day_e $hour_e:$minute_e:$second_e" #i'm not sure if it works in this format
+
+        #section to create "remember_token"
+        remember_token=$(openssl rand -base64 17)
+
+        #section to create "created_at"
+        year2=$(($year - $(shuf -i 0-1 -n 1)))
+        month2=$(($month - $(shuf -i 0-$(($month-1)) -n 1)))
+        day2=$(($day - $(shuf -i 0-$(($day-1)) -n 1)))
+        hour2=$(($hour - $(shuf -i 0-$(($hour-1)) -n 1)))
+        minute2=$(($minute - $(shuf -i 0-$(($minute-1)) -n 1)))
+        second2=second=$(($second - $(shuf -i 0-$(($second-1)) -n 1)))
+        if [[ ${#month2} -eq 1 ]]
+        then
+        month2="0 + $month2"
+        fi
+        if [[ ${#day2} -eq 1 ]]
+        then
+        day2="0 + $day2"
+        fi
+        if [[ ${#hour2} -eq 1 ]]
+        then
+        hour2="0 + $hour2"
+        fi
+        if [[ ${#minute2} -eq 1 ]]
+        then
+        minute2="0 + $minute2"
+        fi
+        if [[ ${#second2} -eq 1 ]]
+        then
+        second2="0 + $second2"
+        fi
+
+        created_at="$year2-$month2-$day2 $hour2:$minute2:$second2"
+
+        #section to create "updated_at"
+        month=$(($month + $(shuf -i 0-$((12-$month)) -n 1)))
+        day=$(($day + $(shuf -i 0-$((31-$day)) -n 1)))
+        hour=$(($hour + $(shuf -i 0-$((23-$hour)) -n 1)))
+        minute=$(($minute + $(shuf -i 0-$((59-$minute)) -n 1)))
+        second=$(($second + $(shuf -i 0-$((59-$second)) -n 1)))
+        if [[ ${#month} -eq 1 ]]
+        then
+        month="0 + $month"
+        fi
+        if [[ ${#day} -eq 1 ]]
+        then
+        day="0 + $day"
+        fi
+        if [[ ${#hour} -eq 1 ]]
+        then
+        hour="0 + $hour"
+        fi
+        if [[ ${#minute} -eq 1 ]]
+        then
+        minute="0 + $minute"
+        fi
+        if [[ ${#second} -eq 1 ]]
+        then
+        second="0 + $second"
+        fi
+
+        updated_at="$year-$month-$day $hour:$minute:$second"
+
+
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (email, name, password, email_verified_at, remember_token, created_at, updated_at) VALUES ('$email', '$name', '$email_verified_at', '$remember_token', '$created_at', '$updated_at')" sql_script.txt
+    done
+    rm temp_client.txt
+    rm temp_client2.txt
 }
 
 
@@ -687,6 +836,7 @@ read -p "Choose an option: " option
             team_logo_link
             team_visitor
             team_local
+            user
 
             sleep 2
             clear
