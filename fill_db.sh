@@ -740,29 +740,36 @@ user () {
         day2=$(($day - $(shuf -i 0-$(($day-1)) -n 1)))
         hour2=$(($hour - $(shuf -i 0-$(($hour-1)) -n 1)))
         minute2=$(($minute - $(shuf -i 0-$(($minute-1)) -n 1)))
-        second2=second=$(($second - $(shuf -i 0-$(($second-1)) -n 1)))
+        second2=$(($second - $(shuf -i 0-$(($second-1)) -n 1)))
+
+        month2_e=$month2
+        day2_e=$day2
+        hour2_e=$hour2
+        minute2_e=$minute2
+        second2_e=$second2
+
         if [[ ${#month2} -eq 1 ]]
         then
-        month2="0 + $month2"
+        month2_e="0$month2"
         fi
         if [[ ${#day2} -eq 1 ]]
         then
-        day2="0 + $day2"
+        day2_e="0$day2"
         fi
         if [[ ${#hour2} -eq 1 ]]
         then
-        hour2="0 + $hour2"
+        hour2_e="0$hour2"
         fi
         if [[ ${#minute2} -eq 1 ]]
         then
-        minute2="0 + $minute2"
+        minute2_e="0$minute2"
         fi
         if [[ ${#second2} -eq 1 ]]
         then
-        second2="0 + $second2"
+        second2_e="0$second2"
         fi
 
-        created_at="$year2-$month2-$day2 $hour2:$minute2:$second2"
+        created_at="$year2-$month2_e-$day2_e $hour2_e:$minute2_e:$second2_e"
 
         #section to create "updated_at"
         month=$(($month + $(shuf -i 0-$((12-$month)) -n 1)))
@@ -770,31 +777,33 @@ user () {
         hour=$(($hour + $(shuf -i 0-$((23-$hour)) -n 1)))
         minute=$(($minute + $(shuf -i 0-$((59-$minute)) -n 1)))
         second=$(($second + $(shuf -i 0-$((59-$second)) -n 1)))
+
+        
         if [[ ${#month} -eq 1 ]]
         then
-        month="0 + $month"
+        month="0$month"
         fi
         if [[ ${#day} -eq 1 ]]
         then
-        day="0 + $day"
+        day="0$day"
         fi
         if [[ ${#hour} -eq 1 ]]
         then
-        hour="0 + $hour"
+        hour="0$hour"
         fi
         if [[ ${#minute} -eq 1 ]]
         then
-        minute="0 + $minute"
+        minute="0$minute"
         fi
         if [[ ${#second} -eq 1 ]]
         then
-        second="0 + $second"
+        second="0$second"
         fi
 
         updated_at="$year-$month-$day $hour:$minute:$second"
 
 
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (email, name, password, email_verified_at, remember_token, created_at, updated_at) VALUES ('$email', '$name', '$email_verified_at', '$remember_token', '$created_at', '$updated_at')" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (email, name, password, email_verified_at, remember_token, created_at, updated_at) VALUES ('$email', '$name', '$password', '$email_verified_at', '$remember_token', '$created_at', '$updated_at')" sql_script.txt
     done
     rm temp_client.txt
     rm temp_client2.txt
