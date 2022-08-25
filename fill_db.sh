@@ -240,7 +240,7 @@ player () {
     initializer
     
     
-    for ((h = 1 ; h < $(($rows*2+1)) ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $players_amount ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
@@ -267,11 +267,11 @@ player_avatar_link () {
     initializer
     
     client_table_start=$(cat sql_script.txt | grep -n player | cut -d ":" -f1 | head -1)
-    client_table_end=$(($client_table_start + $(($rows*2+1)) + 4))
+    client_table_end=$(($client_table_start + $players_amount + 4))
     total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
     cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) > temp_client.txt
     
-    for ((h = 1 ; h < $(($rows*2+1)) ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $players_amount ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
@@ -574,7 +574,7 @@ team () {
     
     
     
-    for ((h = 1 ; h < $(($rows*2+1)) ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $teams ; h++)) #repeat procces as many times as indicated
     do
         #insert data
         number_table_end=$(($number_table_end + 1))
@@ -595,12 +595,12 @@ team_logo_link () {
     initializer
     
     client_table_start=$(cat sql_script.txt | grep -n team- | cut -d ":" -f1 | head -1)
-    client_table_end=$(($client_table_start + $(($rows*2+1)) + 4))
+    client_table_end=$(($client_table_start + $teams + 4))
     total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
     cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) > temp_client.txt
     
 
-    for ((h = 1 ; h < $(($rows*2+1)) ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $teams ; h++)) #repeat procces as many times as indicated
     do  
         #insert data
         number_table_end=$(($number_table_end + 1))
@@ -622,7 +622,7 @@ team_visitor () {
     
     id_team=1
 
-    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $(($teams/2)) ; h++)) #repeat procces as many times as indicated
     do
         #insert data
         number_table_end=$(($number_table_end + 1))
@@ -643,7 +643,7 @@ team_local () {
     
     id_team=1
 
-    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $(($teams/2)) ; h++)) #repeat procces as many times as indicated
     do
         #insert data
         number_table_end=$(($number_table_end + 1))
@@ -832,7 +832,7 @@ client_fav_teams () {
         then
         receive_mail_notifs="TRUE"
         fi
-        id_team=$(shuf -i 1-$(($rows*2+1)) -n 1)
+        id_team=$(shuf -i 1-$(($teams)) -n 1)
         id_client=$(shuf -i 1-$rows -n 1)
         
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_team, id_client, receive_browser_notifs, receive_mail_notifs) VALUES ($id_team, $id_client, $receive_browser_notifs, $receive_mail_notifs)" sql_script.txt
@@ -959,8 +959,12 @@ echo "0- Exit"
 read -p "Choose an option: " option
     case $option in
             1)read -p "How many rows: " rows
+            read -p "How many teams per sport: " teams
             touch sql_script.txt
+            teams_for_player_count=$teams
+            teams=$((($teams*10)+1))
             rows2=$(($rows + 1))
+            players_amount=$((($teams_for_player_count*11)+($teams_for_player_count*5)+($teams_for_player_count)+($teams_for_player_count*9)+($teams_for_player_count)+($teams_for_player_count*6)+($teams_for_player_count)+($teams_for_player_count*10)+($teams_for_player_count)+($teams_for_player_count)+1))
             subscription
             subscription_type
             country
