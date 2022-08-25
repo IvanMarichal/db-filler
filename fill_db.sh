@@ -892,6 +892,26 @@ client_fav_tournament () {
 }
 
 
+group () {
+    
+    #Checks where the table section starts and ends
+    parameter="group"
+    initializer
+    
+    
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+
+        
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, id_phase, name) VALUES ($h, $h, 'Lorem ipsum')" sql_script.txt
+    done
+    
+}
+
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -931,6 +951,7 @@ read -p "Choose an option: " option
             client_fav_teams
             tournament
             client_fav_tournament
+            group
 
             sleep 2
             clear
