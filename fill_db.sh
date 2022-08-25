@@ -861,6 +861,37 @@ tournament () {
 }
 
 
+client_fav_tournament () {
+    
+    #Checks where the table section starts and ends
+    parameter="client_fav_tournament"
+    initializer
+    
+    
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+        receive_browser_notifs="FALSE"
+        receive_mail_notifs="FALSE"
+        if [[ $(shuf -i 1-2 -n 1) -eq 2 ]]
+        then
+        receive_browser_notifs="TRUE"
+        fi
+        if [[ $(shuf -i 1-2 -n 1) -eq 2 ]]
+        then
+        receive_mail_notifs="TRUE"
+        fi
+        id_tournament=$(shuf -i 1-$rows -n 1)
+        id_client=$(shuf -i 1-$rows -n 1)
+        
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_tournament, id_client, receive_browser_notifs, receive_mail_notifs) VALUES ($id_tournament, $id_client, $receive_browser_notifs, $receive_mail_notifs)" sql_script.txt
+    done
+    
+}
+
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -899,6 +930,7 @@ read -p "Choose an option: " option
             user
             client_fav_teams
             tournament
+            client_fav_tournament
 
             sleep 2
             clear
