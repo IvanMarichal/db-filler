@@ -778,7 +778,7 @@ user () {
         minute=$(($minute + $(shuf -i 0-$((59-$minute)) -n 1)))
         second=$(($second + $(shuf -i 0-$((59-$second)) -n 1)))
 
-        
+
         if [[ ${#month} -eq 1 ]]
         then
         month="0$month"
@@ -807,6 +807,37 @@ user () {
     done
     rm temp_client.txt
     rm temp_client2.txt
+}
+
+
+client_fav_teams () {
+    
+    #Checks where the table section starts and ends
+    parameter="client_fav_teams"
+    initializer
+    
+    
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+        receive_browser_notifs="FALSE"
+        receive_mail_notifs="FALSE"
+        if [[ $(shuf -i 1-2 -n 1) -eq 2 ]]
+        then
+        receive_browser_notifs="TRUE"
+        fi
+        if [[ $(shuf -i 1-2 -n 1) -eq 2 ]]
+        then
+        receive_mail_notifs="TRUE"
+        fi
+        id_team=$(shuf -i 1-$(($rows*2+1)) -n 1)
+        id_client=$(shuf -i 1-$rows -n 1)
+        
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_team, id_client, receive_browser_notifs, receive_mail_notifs) VALUES ($id_team, $id_client, $receive_browser_notifs, $receive_mail_notifs)" sql_script.txt
+    done
+    
 }
 
 
@@ -846,6 +877,7 @@ read -p "Choose an option: " option
             team_visitor
             team_local
             user
+            client_fav_teams
 
             sleep 2
             clear
