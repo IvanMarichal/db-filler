@@ -932,6 +932,26 @@ group_set () {
 }
 
 
+direct_elim () {
+    
+    #Checks where the table section starts and ends
+    parameter="direct_elim"
+    initializer
+    
+    
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+
+        
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_phase, id_tournament, name) VALUES ($h, $h, 'Lorem ipsum')" sql_script.txt
+    done
+    
+}
+
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -973,6 +993,7 @@ read -p "Choose an option: " option
             client_fav_tournament
             group
             group_set
+            direct_elim
 
             sleep 2
             clear
