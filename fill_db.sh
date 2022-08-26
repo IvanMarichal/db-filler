@@ -247,7 +247,7 @@ player () {
         #insert data
         name=$(awk "NR==$(shuf -i 1-18239 -n 1)" names.txt)
         surname=$(awk "NR==$(shuf -i 1-88799 -n 1)" surnames.txt)
-        year=$(shuf -i 1980-2012 -n 1) 
+        year=$(shuf -i 1980-2000 -n 1) 
         month=$(shuf -i 1-12 -n 1)
         day=$(shuf -i 1-31 -n 1)
         height=$(shuf -i 165-220 -n 1) #cm
@@ -572,17 +572,89 @@ team () {
     parameter="team"
     initializer
     
+    i=1
+    aux=0
+    
     
     
     for ((h = 1 ; h < $teams ; h++)) #repeat procces as many times as indicated
     do
+
+        id_league=$(shuf -i 1-7 -n 1)
+
+        if [[ $i -gt $teams_for_player_count ]]
+        then
+        aux=$(($aux+1))
+        i=1
+        fi
+
+        if [[ $aux -eq 0 ]]
+        then
+        id_league=$(shuf -i 1-7 -n 1)
+        fi
+
+        if [[ $aux -eq 1 ]]
+        then
+        id_league=8
+        fi
+
+        if [[ $aux -eq 2 ]]
+        then
+        id_league=9
+        fi
+
+        if [[ $aux -eq 3 ]]
+        then
+        id_league=10
+        fi
+
+        if [[ $aux -eq 4 ]]
+        then
+        id_league=11
+        fi
+        
+        if [[ $aux -eq 5 ]]
+        then
+        id_league=12
+        fi
+
+        if [[ $aux -eq 6 ]]
+        then
+        id_league=13
+        fi
+
+        if [[ $aux -eq 7 ]]
+        then
+        id_league=14
+        fi
+
+        if [[ $aux -eq 8 ]]
+        then
+        id_league=15
+        fi
+
+        if [[ $aux -eq 9 ]]
+        then
+        id_league=16
+        fi
+        
+
+
+        
+
+        
+
+
+
+
         #insert data
         number_table_end=$(($number_table_end + 1))
 
         id_country=$(shuf -i 1-$(wc -l countries.txt | cut -d " " -f1) -n 1)
-        id_league=$(shuf -i 1-$(wc -l leagues.txt | cut -d " " -f1) -n 1)
         
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, id_country, id_league) VALUES ($h, 'Lorem ipsum', $id_country, $id_league)" sql_script.txt
+        
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, id_country, id_league) VALUES ($h, 'Team name', $id_country, $id_league)" sql_script.txt
+        i=$(($i+1))
     done
     
 }
