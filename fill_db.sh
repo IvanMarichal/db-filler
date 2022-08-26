@@ -56,7 +56,8 @@ country () {
 
         #insert data
         country=$(awk "NR==$h" countries.txt)
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter(id, country, country_flag_link) VALUES ($h, '$country', 'img/flags/$country.jpg')" sql_script.txt
+        demonym=$(awk "NR==$h" nationalities.txt)
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter(id, country, country_flag_link, demonym) VALUES ($h, '$country', 'img/flags/$country.jpg', '$demonym')" sql_script.txt
     done
 
 }
