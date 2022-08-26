@@ -253,8 +253,7 @@ player () {
         height=$(shuf -i 165-220 -n 1) #cm
         weight=$(shuf -i 60-100 -n 1) #kilos
         random_country_id=$(shuf -i 1-191 -n 1)
-        nationality=$(awk "NR==$random_country_id" nationalities.txt)
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, surname, birth_date, height, weight, id_country, nationality) VALUES ($h, '$name', '$surname', '$year-$month-$day', $height, $weight, $random_country_id, '$nationality')" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, surname, birth_date, height, weight, id_country) VALUES ($h, '$name', '$surname', '$year-$month-$day', $height, $weight, $random_country_id)" sql_script.txt
     done
 
 }
