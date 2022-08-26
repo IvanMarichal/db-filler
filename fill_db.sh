@@ -303,8 +303,7 @@ referee () {
         month=$(shuf -i 1-12 -n 1)
         day=$(shuf -i 1-31 -n 1)
         random_country_id=$(shuf -i 1-191 -n 1)
-        nationality=$(awk "NR==$random_country_id" nationalities.txt)
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, surname, birth_date, id_country, nationality) VALUES ($h, '$name', '$surname', '$year-$month-$day', $random_country_id, '$nationality')" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, surname, birth_date, id_country) VALUES ($h, '$name', '$surname', '$year-$month-$day', $random_country_id)" sql_script.txt
     done
 
 }
