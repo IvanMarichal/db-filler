@@ -354,8 +354,7 @@ manager () {
         month=$(shuf -i 1-12 -n 1)
         day=$(shuf -i 1-31 -n 1)
         random_country_id=$(shuf -i 1-191 -n 1)
-        nationality=$(awk "NR==$random_country_id" nationalities.txt)
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, surname, id_country, birth_date, nationality) VALUES ($h, '$name', '$surname', $random_country_id, '$year-$month-$day', '$nationality')" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, name, surname, id_country, birth_date) VALUES ($h, '$name', '$surname', $random_country_id, '$year-$month-$day')" sql_script.txt
     done
 
 }
