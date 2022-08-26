@@ -344,14 +344,14 @@ manager () {
     initializer
     
     
-    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $teams ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
         #insert data
         name=$(awk "NR==$(shuf -i 1-18239 -n 1)" names.txt)
         surname=$(awk "NR==$(shuf -i 1-88799 -n 1)" surnames.txt)
-        year=$(shuf -i 1960-2000 -n 1) 
+        year=$(shuf -i 1960-1990 -n 1) 
         month=$(shuf -i 1-12 -n 1)
         day=$(shuf -i 1-31 -n 1)
         random_country_id=$(shuf -i 1-191 -n 1)
@@ -369,11 +369,11 @@ manager_avatar_link () {
     initializer
     
     client_table_start=$(cat sql_script.txt | grep -n manager | cut -d ":" -f1 | head -1)
-    client_table_end=$(($client_table_start + $rows2 + 4))
+    client_table_end=$(($client_table_start + $teams + 4))
     total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
     cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) > temp_client.txt
     
-    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $teams ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
 
@@ -1118,6 +1118,34 @@ player_team_shirt_number () {
 }
 
 
+manager_team () {
+    
+    #Checks where the table section starts and ends
+    parameter="manager_team"
+    initializer
+
+
+    for ((h = 1 ; h < $teams ; h++)) #repeat procces as many times as indicated
+    do
+        
+        
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+
+        year=$(shuf -i 2019-2021 -n 1) 
+        month=$(shuf -i 1-12 -n 1)
+        day=$(shuf -i 1-31 -n 1)
+        year2=$(shuf -i 2023-2025 -n 1) 
+        month2=$(shuf -i 1-12 -n 1)
+        day2=$(shuf -i 1-31 -n 1)
+
+        
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_team, id_manager, contract_start_date, contract_end_date) VALUES ($h, $h, '$year-$month-$day', '$year2-$month2-$day2')" sql_script.txt
+    done
+    
+}
+
 
 rm sql_script.txt
 clear
@@ -1167,6 +1195,7 @@ read -p "Choose an option: " option
             direct_elim
             player_team
             player_team_shirt_number
+            manager_team
 
             sleep 2
             clear
