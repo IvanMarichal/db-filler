@@ -33,10 +33,10 @@ subscription_type () {
         number_table_end=$(($number_table_end + 1))
 
         #insert data
-        type="non premium"
+        type="Basic"
         if [[ $(shuf -i 1-2 -n 1) -eq 2 ]]
         then
-        type="premium"
+        type="Premium"
         fi
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, type) VALUES ($h, '$type')" sql_script.txt
     done
