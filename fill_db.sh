@@ -275,9 +275,9 @@ player_avatar_link () {
         number_table_end=$(($number_table_end + 1))
 
         #insert data
-        name=$(awk "NR==$h" temp_client.txt | cut -d " " -f14)
+        name=$(awk "NR==$h" temp_client.txt | cut -d " " -f13)
         name=${name:1:-2}
-        surname=$(awk "NR==$h" temp_client.txt | cut -d " " -f15)
+        surname=$(awk "NR==$h" temp_client.txt | cut -d " " -f14)
         surname=${surname:1:-2}
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_player, avatar_link) VALUES ($h, 'img/avatars/$name-$surname.jpg')" sql_script.txt
     done
@@ -325,9 +325,9 @@ referee_avatar_link () {
         number_table_end=$(($number_table_end + 1))
 
         #insert data
-        name=$(awk "NR==$h" temp_client.txt | cut -d " " -f12)
+        name=$(awk "NR==$h" temp_client.txt | cut -d " " -f11)
         name=${name:1:-2}
-        surname=$(awk "NR==$h" temp_client.txt | cut -d " " -f13)
+        surname=$(awk "NR==$h" temp_client.txt | cut -d " " -f12)
         surname=${surname:1:-2}
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_referee, avatar_link) VALUES ($h, 'img/avatars/$name-$surname.jpg')" sql_script.txt
     done
@@ -375,9 +375,9 @@ manager_avatar_link () {
         number_table_end=$(($number_table_end + 1))
 
         #insert data
-        name=$(awk "NR==$h" temp_client.txt | cut -d " " -f12)
+        name=$(awk "NR==$h" temp_client.txt | cut -d " " -f11)
         name=${name:1:-2}
-        surname=$(awk "NR==$h" temp_client.txt | cut -d " " -f13)
+        surname=$(awk "NR==$h" temp_client.txt | cut -d " " -f12)
         surname=${surname:1:-2}
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_manager, avatar_link) VALUES ($h, 'img/avatars/$name-$surname.jpg')" sql_script.txt
     done
@@ -762,46 +762,12 @@ user () {
         password=$(awk "NR==$h" temp_client2.txt | cut -d "," -f13)
         password=${password:2:-1}
 
-        #section to create "email_verified_at"
         year=$(shuf -i 2015-2022 -n 1) 
         month=$(shuf -i 1-12 -n 1)
         day=$(shuf -i 1-31 -n 1)
         hour=$(shuf -i 1-23 -n 1)
         minute=$(shuf -i 1-59 -n 1)
         second=$(shuf -i 1-59 -n 1)
-
-        month_e=$month
-        day_e=$day
-        hour_e=$hour
-        minute_e=$minute
-        second_e=$second
-
-        if [[ ${#month} -eq 1 ]]
-        then
-        month_e="0$month"
-        fi
-        if [[ ${#day} -eq 1 ]]
-        then
-        day_e="0$day"
-        fi
-        if [[ ${#hour} -eq 1 ]]
-        then
-        hour_e="0$hour"
-        fi
-        if [[ ${#minute} -eq 1 ]]
-        then
-        minute_e="0$minute"
-        fi
-        if [[ ${#second} -eq 1 ]]
-        then
-        second_e="0$second"
-        fi
-        
-
-        email_verified_at="$year-$month_e-$day_e $hour_e:$minute_e:$second_e" #i'm not sure if it works in this format
-
-        #section to create "remember_token"
-        remember_token=$(openssl rand -base64 17)
 
         #section to create "created_at"
         year2=$(($year - $(shuf -i 0-1 -n 1)))
@@ -872,7 +838,7 @@ user () {
         updated_at="$year-$month-$day $hour:$minute:$second"
 
 
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (email, name, password, email_verified_at, remember_token, created_at, updated_at) VALUES ('$email', '$name', '$password', '$email_verified_at', '$remember_token', '$created_at', '$updated_at')" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (email, name, password, email_verified_at, remember_token, created_at, updated_at) VALUES ('$email', '$name', '$password', NULL, NULL, '$created_at', '$updated_at')" sql_script.txt
     done
     rm temp_client.txt
     rm temp_client2.txt
@@ -971,11 +937,32 @@ group () {
     for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
     do
         number_table_end=$(($number_table_end + 1))
-
+        
         #insert data
+        i=$(shuf -i 1-5 -n 1)
+        if [[ i -eq 1 ]]
+        then
+        name="A"
+        fi
+        if [[ i -eq 2 ]]
+        then
+        name="B"
+        fi
+        if [[ i -eq 3 ]]
+        then
+        name="C"
+        fi
+        if [[ i -eq 4 ]]
+        then
+        name="D"
+        fi
+        if [[ i -eq 5 ]]
+        then
+        name="E"
+        fi
 
         
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, id_phase, name) VALUES ($h, $h, 'Lorem ipsum')" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, id_phase, name) VALUES ($h, $h, '$name')" sql_script.txt
     done
     
 }
@@ -1117,7 +1104,7 @@ player_team_shirt_number () {
     players_sport=11
     team_num=1
     i=1
-
+    shirt_number=$i
 
     for ((h = 1 ; h < $players_amount ; h++)) 
     do
@@ -1127,52 +1114,62 @@ player_team_shirt_number () {
         if [[ $i -gt $players_sport ]]
         then
         i=1
+        shirt_number=$i
         team_num=$(($team_num+1))
         fi
 
         if [[ $team_num -gt $teams_for_player_count ]]
         then
         players_sport=5
+        shirt_number=$i
         fi
 
         if [[ $team_num -gt $(($teams_for_player_count*2)) ]]
         then
         players_sport=1
+        shirt_number="NULL"
         fi
 
         if [[ $team_num -gt $(($teams_for_player_count*3)) ]]
         then
         players_sport=9
+        shirt_number=$i
         fi
 
         if [[ $team_num -gt $(($teams_for_player_count*4)) ]]
         then
         players_sport=1
+        shirt_number="NULL"
         fi
 
         if [[ $team_num -gt $(($teams_for_player_count*5)) ]]
         then
         players_sport=6
+        shirt_number=$i
         fi
 
         if [[ $team_num -gt $(($teams_for_player_count*6)) ]]
         then
         players_sport=1
+        shirt_number="NULL"
         fi
 
         if [[ $team_num -gt $(($teams_for_player_count*7)) ]]
         then
         players_sport=10
+        shirt_number=$i
         fi
 
         if [[ $team_num -gt $(($teams_for_player_count*8)) ]]
         then
         players_sport=1
+        shirt_number="NULL"
         fi
 
         if [[ $team_num -gt $(($teams_for_player_count*9)) ]]
         then
         players_sport=1
+        shirt_number="NULL"
         fi
 
         number_table_end=$(($number_table_end + 1))
@@ -1180,8 +1177,9 @@ player_team_shirt_number () {
         #insert data
 
         
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_player, id_team, shirt_number) VALUES ($h, $team_num, '$i')" sql_script.txt
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_player, id_team, shirt_number) VALUES ($h, $team_num, '$shirt_number')" sql_script.txt
         i=$(($i+1))
+        shirt_number=$i
     done
     
 }
