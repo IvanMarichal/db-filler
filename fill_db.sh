@@ -1039,6 +1039,85 @@ player_team () {
 }
 
 
+player_team_shirt_number () {
+    
+    #Checks where the table section starts and ends
+    parameter="player_team_shirt_number"
+    initializer
+
+    players_sport=11
+    team_num=1
+    i=1
+
+
+    for ((h = 1 ; h < $players_amount ; h++)) 
+    do
+        
+        
+         
+        if [[ $i -gt $players_sport ]]
+        then
+        i=1
+        team_num=$(($team_num+1))
+        fi
+
+        if [[ $team_num -gt $teams_for_player_count ]]
+        then
+        players_sport=5
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*2)) ]]
+        then
+        players_sport=1
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*3)) ]]
+        then
+        players_sport=9
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*4)) ]]
+        then
+        players_sport=1
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*5)) ]]
+        then
+        players_sport=6
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*6)) ]]
+        then
+        players_sport=1
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*7)) ]]
+        then
+        players_sport=10
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*8)) ]]
+        then
+        players_sport=1
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*9)) ]]
+        then
+        players_sport=1
+        fi
+
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+
+        
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_player, id_team, shirt_number) VALUES ($h, $team_num, '$i')" sql_script.txt
+        i=$(($i+1))
+    done
+    
+}
+
+
 
 rm sql_script.txt
 clear
@@ -1087,6 +1166,7 @@ read -p "Choose an option: " option
             group_set
             direct_elim
             player_team
+            player_team_shirt_number
 
             sleep 2
             clear
