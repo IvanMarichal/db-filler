@@ -952,6 +952,94 @@ direct_elim () {
 }
 
 
+player_team () {
+    
+    #Checks where the table section starts and ends
+    parameter="player_team"
+    initializer
+
+    players_sport=11 #soccer
+    team_num=1
+    i=1
+
+
+    for ((h = 1 ; h < $players_amount ; h++)) #repeat procces as many times as indicated
+    do
+        
+        
+         
+        if [[ $i -gt $players_sport ]]
+        then
+        i=1
+        team_num=$(($team_num+1))
+        fi
+
+        if [[ $team_num -gt $teams_for_player_count ]]
+        then
+        players_sport=5
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*2)) ]]
+        then
+        players_sport=1
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*3)) ]]
+        then
+        players_sport=9
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*4)) ]]
+        then
+        players_sport=1
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*5)) ]]
+        then
+        players_sport=6
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*6)) ]]
+        then
+        players_sport=1
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*7)) ]]
+        then
+        players_sport=10
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*8)) ]]
+        then
+        players_sport=1
+        fi
+
+        if [[ $team_num -gt $(($teams_for_player_count*9)) ]]
+        then
+        players_sport=1
+        fi
+        #it can be done better i just ran out of time
+
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+
+        year=$(shuf -i 2019-2021 -n 1) 
+        month=$(shuf -i 1-12 -n 1)
+        day=$(shuf -i 1-31 -n 1)
+        year2=$(shuf -i 2023-2025 -n 1) 
+        month2=$(shuf -i 1-12 -n 1)
+        day2=$(shuf -i 1-31 -n 1)
+
+        
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_player, id_team, position, contract_start_date, contract_end_date) VALUES ($h, $team_num, 'Lorem ipsum', '$year-$month-$day', '$year2-$month2-$day2')" sql_script.txt
+        i=$(($i+1))
+    done
+    
+}
+
+
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -998,6 +1086,7 @@ read -p "Choose an option: " option
             group
             group_set
             direct_elim
+            player_team
 
             sleep 2
             clear
