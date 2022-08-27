@@ -4,22 +4,6 @@ initializer(){
     number_table_end=$(($number_table_start + 4))
 }
 
-subscription () {
-
-    #Checks where the table section starts and ends
-    parameter="subscription"
-    initializer
-    
-    
-    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
-    do
-        number_table_end=$(($number_table_end + 1))
-
-        #insert data
-        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, description) VALUES ($h, 'Lorem ipsum dolor sit amet')" sql_script.txt
-    done
-
-}
 
 subscription_type () {
 
@@ -42,6 +26,37 @@ subscription_type () {
     done
 
 }
+
+
+subscription () {
+
+    #Checks where the table section starts and ends
+    parameter="subscription"
+    initializer
+    
+    client_table_start=$(cat sql_script.txt | grep -n ^--subscription_type-- | cut -d ":" -f1 | head -1)
+    client_table_end=$(($client_table_start + $rows2 + 4))
+    total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
+    cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) > temp_client.txt
+
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+        plan=$(awk "NR==$h" temp_client.txt | cut -d " " -f8)
+        plan=${plan:1:-2}
+        description="Ideal para los aficionados a los deportes"
+        if [[ "$plan" == "Basic" ]]
+        then
+        description="Plan gratis para todos los usuarios"
+        fi
+
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id, description) VALUES ($h, '$description')" sql_script.txt
+    done
+    rm temp_client.txt
+}
+
 
 country () {
     
@@ -1228,8 +1243,8 @@ read -p "Choose an option: " option
             teams=$((($teams*10)+1))
             rows2=$(($rows + 1))
             players_amount=$((($teams_for_player_count*11)+($teams_for_player_count*5)+($teams_for_player_count)+($teams_for_player_count*9)+($teams_for_player_count)+($teams_for_player_count*6)+($teams_for_player_count)+($teams_for_player_count*10)+($teams_for_player_count)+($teams_for_player_count)+1))
-            subscription
             subscription_type
+            subscription
             country
             client
             client_avatar_link
