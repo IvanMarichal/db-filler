@@ -707,7 +707,7 @@ team_visitor () {
     
     id_team=1
 
-    for ((h = 1 ; h < $(($teams/2)) ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $((($teams/2)+1)) ; h++)) #repeat procces as many times as indicated
     do
         #insert data
         number_table_end=$(($number_table_end + 1))
@@ -728,7 +728,7 @@ team_local () {
     
     id_team=1
 
-    for ((h = 1 ; h < $(($teams/2)) ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $((($teams/2)+1)) ; h++)) #repeat procces as many times as indicated
     do
         #insert data
         number_table_end=$(($number_table_end + 1))
@@ -1035,7 +1035,7 @@ player_team () {
     i=1
 
 
-    for ((h = 1 ; h < $players_amount ; h++)) #repeat procces as many times as indicated
+    for ((h = 1 ; h < $players_team ; h++)) #repeat procces as many times as indicated
     do
         
         
@@ -1053,43 +1053,19 @@ player_team () {
 
         if [[ $team_num -gt $(($teams_for_player_count*2)) ]]
         then
-        players_sport=1
+        players_sport=9
         fi
 
         if [[ $team_num -gt $(($teams_for_player_count*3)) ]]
         then
-        players_sport=9
+        players_sport=6
         fi
 
         if [[ $team_num -gt $(($teams_for_player_count*4)) ]]
         then
-        players_sport=1
-        fi
-
-        if [[ $team_num -gt $(($teams_for_player_count*5)) ]]
-        then
-        players_sport=6
-        fi
-
-        if [[ $team_num -gt $(($teams_for_player_count*6)) ]]
-        then
-        players_sport=1
-        fi
-
-        if [[ $team_num -gt $(($teams_for_player_count*7)) ]]
-        then
         players_sport=10
         fi
 
-        if [[ $team_num -gt $(($teams_for_player_count*8)) ]]
-        then
-        players_sport=1
-        fi
-
-        if [[ $team_num -gt $(($teams_for_player_count*9)) ]]
-        then
-        players_sport=1
-        fi
         #it can be done better i just ran out of time
 
         number_table_end=$(($number_table_end + 1))
@@ -1122,7 +1098,7 @@ player_team_shirt_number () {
     i=1
     shirt_number=$i
 
-    for ((h = 1 ; h < $players_amount ; h++)) 
+    for ((h = 1 ; h < $players_team ; h++)) 
     do
         
         
@@ -1255,9 +1231,11 @@ read -p "Choose an option: " option
             read -p "How many teams per sport: " teams
             touch sql_script.txt
             teams_for_player_count=$teams
-            teams=$((($teams*10)+1))
+            teams=$((($teams*5)+1))
             rows2=$(($rows + 1))
             players_amount=$((($teams_for_player_count*11)+($teams_for_player_count*5)+($teams_for_player_count)+($teams_for_player_count*9)+($teams_for_player_count)+($teams_for_player_count*6)+($teams_for_player_count)+($teams_for_player_count*10)+($teams_for_player_count)+($teams_for_player_count)+1))
+            players_team=$((($teams_for_player_count*11)+($teams_for_player_count*5)+($teams_for_player_count*9)+($teams_for_player_count*6)+($teams_for_player_count*10)+1))
+            players_without_team=$((($teams_for_player_count*5)+1))
             subscription_type
             subscription
             country
