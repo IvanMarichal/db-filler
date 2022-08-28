@@ -1118,50 +1118,20 @@ player_team_shirt_number () {
 
         if [[ $team_num -gt $(($teams_for_player_count*2)) ]]
         then
-        players_sport=1
-        shirt_number="NULL"
-        fi
-
-        if [[ $team_num -gt $(($teams_for_player_count*3)) ]]
-        then
         players_sport=9
         shirt_number=$i
         fi
 
-        if [[ $team_num -gt $(($teams_for_player_count*4)) ]]
-        then
-        players_sport=1
-        shirt_number="NULL"
-        fi
-
-        if [[ $team_num -gt $(($teams_for_player_count*5)) ]]
+        if [[ $team_num -gt $(($teams_for_player_count*3)) ]]
         then
         players_sport=6
         shirt_number=$i
         fi
 
-        if [[ $team_num -gt $(($teams_for_player_count*6)) ]]
-        then
-        players_sport=1
-        shirt_number="NULL"
-        fi
-
-        if [[ $team_num -gt $(($teams_for_player_count*7)) ]]
+        if [[ $team_num -gt $(($teams_for_player_count*4)) ]]
         then
         players_sport=10
         shirt_number=$i
-        fi
-
-        if [[ $team_num -gt $(($teams_for_player_count*8)) ]]
-        then
-        players_sport=1
-        shirt_number="NULL"
-        fi
-
-        if [[ $team_num -gt $(($teams_for_player_count*9)) ]]
-        then
-        players_sport=1
-        shirt_number="NULL"
         fi
 
         number_table_end=$(($number_table_end + 1))
