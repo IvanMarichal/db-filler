@@ -1230,6 +1230,21 @@ manager_team () {
 }
 
 
+sanction_card () {
+    
+    #Checks where the table section starts and ends
+    parameter="sanction_card"
+    initializer
+
+    number_table_end=$(($number_table_end + 1))
+
+    sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_sanction, color) VALUES (1, 'yellow')" sql_script.txt
+    number_table_end=$(($number_table_end + 1))
+    sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_sanction, color) VALUES (2, 'red')" sql_script.txt
+    
+}
+
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -1279,6 +1294,7 @@ read -p "Choose an option: " option
             player_team
             player_team_shirt_number
             manager_team
+            sanction_card
 
             sleep 2
             clear
