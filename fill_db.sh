@@ -1263,6 +1263,27 @@ player_local () {
 }
 
 
+event_referee () {
+    
+    #Checks where the table section starts and ends
+    parameter="event_referee"
+    initializer
+
+
+    for ((h = 1 ; h < $rows2 ; h++)) #repeat procces as many times as indicated
+    do
+        
+        
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+
+        id_referee=$(shuf -i 1-$rows -n 1)
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_event, id_referee) VALUES ($h, $id_referee)" sql_script.txt
+    done
+}
+
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -1317,6 +1338,7 @@ read -p "Choose an option: " option
             sanction_card
             player_visitor
             player_local
+            event_referee
 
             sleep 2
             clear
