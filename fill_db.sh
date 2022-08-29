@@ -1191,6 +1191,42 @@ sanction_card () {
 }
 
 
+player_visitor () {
+    
+    #Checks where the table section starts and ends
+    parameter="player_visitor"
+    initializer
+
+    client_table_start=$(cat sql_script.txt | grep -n player- | cut -d ":" -f1 | head -1)
+    client_table_end=$(($client_table_start + $players_amount + 4))
+    total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
+    cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) | tail -n $players_without_team  > temp_client.txt
+
+    client_table_start=$(cat sql_script.txt | grep -n event- | cut -d ":" -f1 | head -1)
+    client_table_end=$(($client_table_start + $rows2 + 4))
+    total_lines=$(wc -l sql_script.txt | cut -d " " -f1)
+    cat sql_script.txt | tail -n $(($total_lines-$client_table_start-2)) | head -n $(($client_table_end-$client_table_start-4)) | tail -n $(($rows-$((($teams_for_player_count*5)/2))+1))  > temp_client2.txt
+
+    for ((h = 1 ; h < $((($players_without_team/2)+1)) ; h++)) #repeat procces as many times as indicated
+    do
+        
+        
+        number_table_end=$(($number_table_end + 1))
+
+        #insert data
+
+        id_player=$(awk "NR==$(($h*2 - 1 ))" temp_client.txt | cut -d " " -f12)
+        id_player=${id_player:1:-1}
+        id_event=$(awk "NR==$h" temp_client2.txt | cut -d " " -f9)
+        id_event=${id_event:1:-1}
+        
+        sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_event, id_player) VALUES ($id_event, $id_player)" sql_script.txt
+    done
+    ##rm temp_client.txt
+    ##rm temp_client2.txt
+}
+
+
 rm sql_script.txt
 clear
 echo "1- Fill the whole database"
@@ -1243,6 +1279,7 @@ read -p "Choose an option: " option
             player_team_shirt_number
             manager_team
             sanction_card
+            player_visitor
 
             sleep 2
             clear
