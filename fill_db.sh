@@ -1222,8 +1222,8 @@ player_visitor () {
         
         sed -i "$(($number_table_end - 2)) i INSERT INTO $parameter (id_event, id_player) VALUES ($id_event, $id_player)" sql_script.txt
     done
-    ##rm temp_client.txt
-    ##rm temp_client2.txt
+    rm temp_client.txt
+    rm temp_client2.txt
 }
 
 
